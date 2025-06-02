@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className='bg-[#2e7d32] text-white py-4'>
+    <footer className='bg-[#3F7D58] text-white py-4'>
       <div className='max-w-7xl mx-auto px-6 flex items-center justify-between'>
         {/* Left Section: Sortify-Trash */}
         <div className='text-xl md:text-2xl font-bold'>

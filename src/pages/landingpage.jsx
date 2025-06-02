@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/navbar";
+import Navbar from "../components/Navbar";
 import Footer from "../components/footer";
-import { FiTrash2, FiDownload, FiFile } from "react-icons/fi";
 import fotoHero from "../assets/foto.jpg";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [result, setResult] = useState(null);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -25,7 +23,6 @@ const LandingPage = () => {
 
   const removeFile = () => {
     setUploadedFile(null);
-    setResult(null);
   };
 
   const handleSubmit = async () => {
@@ -41,7 +38,14 @@ const LandingPage = () => {
       });
 
       const data = await response.json();
-      setResult(data.result);
+      const imageUrl = URL.createObjectURL(uploadedFile);
+
+      navigate("/result", {
+        state: {
+          result: data.result,
+          imageUrl: imageUrl,
+        },
+      });
     } catch (error) {
       console.error("Error saat upload:", error);
     }
@@ -50,24 +54,20 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#f3f3f3] text-gray-800 font-sans flex flex-col">
       <Navbar />
-
       <main className="pt-24 px-4 sm:px-8 md:px-16 lg:px-32 flex-1">
         {/* HERO */}
         <section className="grid md:grid-cols-2 items-center gap-10">
-          {/* Left */}
-          <div className="text-left">
-            <h1 className="text-6xl font-extrabold text-[#2e7d32] leading-tight">
+          <div className="text-left pl-20">
+            <h1 className="text-6xl font-extrabold text-[#3F7D58] leading-tight">
               Sortify–<span className="text-gray-900">Trash</span>
             </h1>
             <p className="text-sm text-gray-600 mt-1 mb-6">Clean Environment</p>
           </div>
-
-          {/* Right */}
           <div className="flex justify-center">
             <img
               src={fotoHero}
               alt="Sampah"
-              className="w-[250px] h-[250px] rounded-full object-cover border-4 border-white shadow-lg"
+              className="w-[300px] h-[300px] rounded-full object-cover border-4 border-white shadow-lg"
             />
           </div>
         </section>
@@ -75,9 +75,8 @@ const LandingPage = () => {
         {/* UPLOAD AREA */}
         <section className="mt-16 mb-20">
           <div className="bg-white max-w-3xl mx-auto rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-[#2e7d32] mb-4">Upload Files</h2>
+            <h2 className="text-xl font-semibold text-black mb-4">Upload Files</h2>
 
-            {/* Drop Zone */}
             <div
               className="border-2 border-dashed border-gray-300 rounded-lg py-10 text-center cursor-pointer hover:bg-gray-50 transition"
               onDragOver={(e) => e.preventDefault()}
@@ -90,7 +89,7 @@ const LandingPage = () => {
                 className="hidden"
                 onChange={handleFileChange}
               />
-              <div className="flex justify-center text-[#2e7d32] mb-2">
+              <div className="flex justify-center text-black mb-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-10 w-10"
@@ -102,12 +101,10 @@ const LandingPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
               </div>
-              <p className="text-gray-500 text-sm">Drag & drop or click to choose files</p>
+              <p className="text-gray-500 text-sm">Drag & drop atau klik untuk upload gambar</p>
             </div>
-            <br></br>
 
-            {/* File Info */}
-             {uploadedFile && (
+            {uploadedFile && (
               <div className="mt-6 bg-gray-800/60 backdrop-blur-md p-4 rounded-lg flex items-center justify-between border border-gray-600">
                 <span className="text-gray-100 font-medium">{uploadedFile.name}</span>
                 <button
@@ -117,26 +114,18 @@ const LandingPage = () => {
                   Hapus
                 </button>
               </div>
-          )}
+            )}
 
-          {result && (
-            <div className="mt-8 p-6 bg-emerald-900/40 border border-emerald-500 rounded-lg text-center shadow-md">
-              <h3 className="text-2xl font-bold text-emerald-300 mb-2">Hasil Klasifikasi</h3>
-              <p className="text-lg">Sampah tersebut termasuk: <strong>{result}</strong></p>
-            </div>
-          )}
-
-            <br></br>
+            <br />
             <button
-                  onClick={handleSubmit}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-6 rounded-xl shadow-lg transition"
-                >
-                  Klasifikasikan Sekarang
-                </button>
+              onClick={handleSubmit}
+              className="bg-[#3F7D58] text-white hover:bg-[#64A47E] hover:text-black py-3 px-6 rounded-xl shadow-lg transition"
+            >
+              Klasifikasikan Sekarang
+            </button>
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

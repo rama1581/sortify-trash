@@ -10,8 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
-        <Route path="/" element={<Result />} />
-        {/* Tambah route lain di sini */}
+        <Route path="/Result" element={<Result />} />
       </Routes>
     </Router>
   );
