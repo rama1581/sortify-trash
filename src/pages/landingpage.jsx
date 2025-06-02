@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 const LandingPage = () => {
   const navigate = useNavigate();
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [result, setResult] = useState(null);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -20,6 +21,26 @@ const LandingPage = () => {
 
   const removeFile = () => {
     setUploadedFile(null);
+    setResult(null);
+  };
+
+  const handleSubmit = async () => {
+    if (!uploadedFile) return;
+
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+
+    try {
+      const response = await fetch("http://localhost:5000/predict", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      setResult(data.result);
+    } catch (error) {
+      console.error("Error saat upload:", error);
+    }
   };
 
   return (
@@ -35,7 +56,6 @@ const LandingPage = () => {
         </div>
       </header>
 
-      {/* MAIN */}
       <main className="pt-32 pb-20 px-6 max-w-6xl mx-auto">
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -43,10 +63,15 @@ const LandingPage = () => {
               AI-Based Trash Classifier
             </h1>
             <p className="text-lg text-gray-300 mb-8">
-              Upload sampah dan dapatkan klasifikasi otomatis: <span className="text-emerald-400 font-semibold">Organik</span> atau <span className="text-emerald-400 font-semibold">Anorganik</span>.
+              Upload sampah dan dapatkan klasifikasi otomatis:{" "}
+              <span className="text-emerald-400 font-semibold">Organik</span> atau{" "}
+              <span className="text-emerald-400 font-semibold">Anorganik</span>.
             </p>
-            <button className="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-6 rounded-xl shadow-lg transition">
-              Mulai Upload
+            <button
+              onClick={handleSubmit}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-6 rounded-xl shadow-lg transition"
+            >
+              Klasifikasikan Sekarang
             </button>
           </div>
           <div className="flex justify-center">
@@ -93,6 +118,13 @@ const LandingPage = () => {
               >
                 Hapus
               </button>
+            </div>
+          )}
+
+          {result && (
+            <div className="mt-8 p-6 bg-emerald-900/40 border border-emerald-500 rounded-lg text-center shadow-md">
+              <h3 className="text-2xl font-bold text-emerald-300 mb-2">Hasil Klasifikasi</h3>
+              <p className="text-lg">Sampah tersebut termasuk: <strong>{result}</strong></p>
             </div>
           )}
         </section>
