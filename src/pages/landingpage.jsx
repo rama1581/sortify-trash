@@ -8,6 +8,10 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [uploadedFile, setUploadedFile] = useState(null);
 
+  // ✅ Tambahan: state untuk result dan accuracy
+  const [result, setResult] = useState(null);
+  const [accuracy, setAccuracy] = useState(null);
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setUploadedFile(e.target.files[0]);
@@ -23,6 +27,8 @@ const LandingPage = () => {
 
   const removeFile = () => {
     setUploadedFile(null);
+    setResult(null);
+    setAccuracy(null);
   };
 
   const handleSubmit = async () => {
@@ -38,11 +44,14 @@ const LandingPage = () => {
       });
 
       const data = await response.json();
+      setResult(data.result);
+      setAccuracy(data.accuracy);
       const imageUrl = URL.createObjectURL(uploadedFile);
 
       navigate("/result", {
         state: {
           result: data.result,
+          accuracy: data.accuracy,
           imageUrl: imageUrl,
         },
       });

@@ -24,7 +24,7 @@ def predict():
     file = request.files["file"]
     features = extract_features(file)
     prediction = model.predict(features)[0]
-
+    
     return jsonify({
         "result": prediction,
         "accuracy": round(accuracy * 100, 2)
