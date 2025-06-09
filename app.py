@@ -26,6 +26,7 @@ with open("model.pkl", "rb") as f:
 with open("label_encoder.pkl", "rb") as f:
     label_encoder = pickle.load(f)
 
+<<<<<<< HEAD
 # Fungsi ekstraksi fitur dari gambar
 def preprocess_and_extract_features(image: np.ndarray) -> np.ndarray:
     image = cv2.resize(image, (128, 128))
@@ -37,6 +38,16 @@ def preprocess_and_extract_features(image: np.ndarray) -> np.ndarray:
     min_val = np.min(hist_eq)
     max_val = np.max(hist_eq)
     stretched = ((hist_eq - min_val) * (255.0 / (max_val - min_val))).astype(np.uint8)
+=======
+    file = request.files["file"]
+    features = extract_features(file)
+    prediction = model.predict(features)[0]
+    
+    return jsonify({
+        "result": prediction,
+        "accuracy": round(accuracy * 100, 2)
+    })
+>>>>>>> 3e1ab8446fbb819e5892d5c6c9a5c212b56ab2c9
 
     # GLCM Features
     glcm = graycomatrix(stretched, [1], [0], symmetric=True, normed=True)
