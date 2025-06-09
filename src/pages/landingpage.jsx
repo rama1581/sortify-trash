@@ -7,10 +7,7 @@ import fotoHero from "../assets/foto.jpg";
 const LandingPage = () => {
   const navigate = useNavigate();
   const [uploadedFile, setUploadedFile] = useState(null);
-
-  // ✅ Tambahan: state untuk result dan accuracy
   const [result, setResult] = useState(null);
-  const [accuracy, setAccuracy] = useState(null);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -28,7 +25,6 @@ const LandingPage = () => {
   const removeFile = () => {
     setUploadedFile(null);
     setResult(null);
-    setAccuracy(null);
   };
 
   const handleSubmit = async () => {
@@ -38,21 +34,20 @@ const LandingPage = () => {
     formData.append("file", uploadedFile);
 
     try {
-      const response = await fetch("http://localhost:5000/predict", {
+      const response = await fetch("http://localhost:8000/predict", {
         method: "POST",
         body: formData,
       });
 
       const data = await response.json();
-      setResult(data.result);
-      setAccuracy(data.accuracy);
+      setResult(data.prediction);
       const imageUrl = URL.createObjectURL(uploadedFile);
 
       navigate("/result", {
         state: {
-          result: data.result,
-          accuracy: data.accuracy,
+          result: data.prediction,
           imageUrl: imageUrl,
+          steps: data.steps, // ✅ kirim step hasil citra digital
         },
       });
     } catch (error) {
